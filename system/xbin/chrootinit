@@ -3,7 +3,7 @@
 . /system/etc/chroot.cfg
 
 unset LD_PRELOAD
-export PATH="/usr/local/bin:/susr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:"
+export PATH="/usr/local/bin:/susr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
 export HOME="/root"
 export SHELL="/bin/bash"
 export TERM="xterm"
