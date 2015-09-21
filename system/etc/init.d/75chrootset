@@ -12,8 +12,13 @@ do
 	mkdir ${CHROOT_DIR}/${dir}
     fi
 
-    mount -o bind /proc ${CHROOT_DIR}/${dir}
+    mount -o bind ${dir} ${CHROOT_DIR}/${dir}
+done
+
+for dir in $EXTRA_DIRS
+do
+    $DIRNAME=`echo $dir | sed 's/[[:print:]]*\///g'`
+    mount -o bind $dir $DIRNAME
 done
 
 mount -o remount,exec,dev,suid /data
-
