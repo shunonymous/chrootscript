@@ -1,0 +1,19 @@
+#!/system/bin/sh
+
+. /system/etc/chroot.cfg
+
+# For using fuse (ex.sshfs)
+chmod 777 /dev/fuse
+
+for dir in "proc" "sys" "dev" "dev/pts"
+do
+    if [ ! -e ${CHROOT_DIR}/${dir} ]
+    then
+	mkdir ${CHROOT_DIR}/${dir}
+    fi
+
+    mount -o bind /proc ${CHROOT_DIR}/${dir}
+done
+
+mount -o remount,exec,dev,suid /data
+

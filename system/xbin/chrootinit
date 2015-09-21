@@ -1,0 +1,11 @@
+#!/system/bin/sh
+
+. /system/etc/chroot.cfg
+
+unset LD_PRELOAD
+export PATH="/usr/local/bin:/susr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:"
+export HOME="/root"
+export SHELL="/bin/bash"
+export TERM="xterm"
+
+chroot $CHROOT_DIR $SHELL -l
