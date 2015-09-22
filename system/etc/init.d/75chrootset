@@ -2,23 +2,34 @@
 
 . /system/etc/chroot.cfg
 
+echo "########chrootset at `date`########" | tee -a $LOGFILE
+
 # For using fuse (ex.sshfs)
 chmod 777 /dev/fuse
 
-for dir in "proc" "sys" "dev" "dev/pts"
+for dir in "/proc" "/sys" "/dev" "/dev/pts"
 do
     if [ ! -e ${CHROOT_DIR}/${dir} ]
     then
 	mkdir ${CHROOT_DIR}/${dir}
     fi
-
+    echo "mount ${dir} ${CHROOT_DIR}/${dir}" | tee -a $LOGFILE
     mount -o bind ${dir} ${CHROOT_DIR}/${dir}
 done
 
 for dir in $EXTRA_DIRS
 do
-    $DIRNAME=`echo $dir | sed 's/[[:print:]]*\///g'`
-    mount -o bind $dir $DIRNAME
+    DIRNAME=`echo ${dir} | sed 's/[[:print:]]*\///g'`
+    if [ ! -e ${CHROOT_DIR}/mnt/${DIRNAME} ]
+    then
+	mkdir ${CHROOT_DIR}/mnt/${DIRNAME}
+    fi
+    echo "mount ${dir} to ${CHROOT_DIR}/mnt/${DIRNAME}" | tee -a $LOGFILE
+    mount -o bind $dir ${CHROOT_DIR}/mnt/${DIRNAME}
 done
 
 mount -o remount,exec,dev,suid /data
+
+echo "chrootset finished." | tee -a $LOGFILE
+
+chmod 644 $LOGFILE

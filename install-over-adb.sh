@@ -1,10 +1,9 @@
 #!/bin/sh
 
 adb root
-
+sleep 5
 adb remount
-
-sleep 2
+sleep 5
 
 adb push ./system /system
 adb shell chmod 755 /system/xbin/chrootinit
