@@ -40,14 +40,14 @@ mount -o remount,exec,dev,suid /data
 
 echo "Init daemon is ${INIT}." | tee -a $LOGFILE
 
-if [ $INIT -e "upstart" ]
+if [ $INIT -eq "upstart" ]
 then
     for service in $SERVICES
     do
 	chroot $CHROOT_DIR service $service start 
 	echo "${service} service started." | tee -a $LOGFILE
     done
-elif [ $INIT -e "systemd" ]
+elif [ $INIT -eq "systemd" ]
 then
     for service in $SERVICES
     do
