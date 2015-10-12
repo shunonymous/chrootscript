@@ -2,6 +2,12 @@
 
 . /system/etc/chroot.cfg
 
+unset LD_PRELOAD
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
+export HOME="/root"
+export SHELL="/bin/bash"
+export TERM="xterm"
+
 echo "########chrootset at `date`########" | tee -a $LOGFILE
 
 # For using fuse (ex.sshfs)
@@ -30,6 +36,25 @@ done
 
 mount -o remount,exec,dev,suid /data
 
+# Start services (ex.sshd)
+
+echo "Init daemon is ${INIT}." | tee -a $LOGFILE
+
+if [ $INIT -e "upstart" ]
+then
+    for service in $SERVICES
+    do
+	chroot $CHROOT_DIR service $service start 
+	echo "${service} service started." | tee -a $LOGFILE
+    done
+elif [ $INIT -e "systemd" ]
+then
+    for service in $SERVICES
+    do
+	chroot $CHROOT_DIR systemctl start $service
+	echo "${service} service started." | tee -a $LOGFILE
+    done     
+fi
 echo "chrootset finished." | tee -a $LOGFILE
 
 chmod 644 $LOGFILE
